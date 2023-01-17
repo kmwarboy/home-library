@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookReader } from "@fortawesome/free-solid-svg-icons";
 import "./Login.scss";
@@ -14,12 +15,12 @@ const Login = () => {
 				<div className="login-form">
 					<form>
 						<div className="login-field">
-							<label for="username">username: </label>
-							<input name="username" type="text" id="username" />
+							<label htmlFor="username">username: </label>
+							<input name="username" type="text" />
 						</div>
 						<div className="login-field">
-							<label for="password">password: </label>
-							<input name="password" type="password" id="password" />
+							<label htmlFor="password">password: </label>
+							<input name="password" type="password" />
 						</div>
 						<button className="login-submit" type="submit">
 							submit
@@ -31,6 +32,7 @@ const Login = () => {
 						new here? <a href="/">sign up</a>.
 					</p>
 				</div>
+				<Link to="/dashboard">Dashboard</Link>
 			</div>
 		</div>
 	);
