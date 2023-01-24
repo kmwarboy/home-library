@@ -1,0 +1,36 @@
+.dashboard-modal {
+	border: 1px solid red;
+	display: flex;
+	min-height: 100%;
+
+	.modal-left {
+		border: 1px solid black;
+		margin-right: 10px;
+		width: 50%;
+		.book-cover {
+			height: auto;
+		}
+	}
+
+	.modal-right {
+		width: 50%;
+		// border: 1px solid black;
+		margin-left: 10px;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+
+		.book-isbn {
+			border: 1px solid black;
+			text-align: left;
+		}
+		.book-title {
+			border: 1px solid black;
+			text-align: left;
+		}
+		.book-author {
+			border: 1px solid black;
+			text-align: left;
+		}
+	}
+}

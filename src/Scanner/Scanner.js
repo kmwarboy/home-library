@@ -3,12 +3,22 @@ import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import axios from "axios";
 import "./Scanner.scss";
 
-const Scanner = () => {
-	const [scanData, setScanData] = useState("");
+const Scanner = ({
+	show,
+	scannedBookData,
+	scannedBookCoverArt,
+	scannedISBN,
+}) => {
 	const [stopStream, setStopStream] = useState(false);
+	const [scanData, setScanData] = useState("");
 	const [bookData, setBookData] = useState(null);
 	const [bookCoverArt, setBookCoverArt] = useState(null);
 
+	// TODO:
+	// 1. Refactor at some point to use node-fetch instead of axios
+	// 2. Handle no book matched/found
+
+	// If the scanner finds and ISBN (scanData), look for a match in this API and get the data for the book.
 	useEffect(() => {
 		if (scanData !== "") {
 			setStopStream(true);
@@ -24,7 +34,7 @@ const Scanner = () => {
 	}, [scanData]);
 
 	useEffect(() => {
-		// if no book covers show up from the first API, call this one
+		// If no book covers show up from the first API, call this one
 		if (bookData && !bookData[0].cover) {
 			axios
 				.get(`https://bookcover-api.onrender.com/bookcover/${scanData}`)
@@ -35,8 +45,18 @@ const Scanner = () => {
 		}
 	}, [bookData, scanData]);
 
-	console.log(bookData);
-	console.log(bookCoverArt);
+	// Hoist the data from this component up to the Dashboard via these functions/props so it can be displayed in the Modal.
+	if (scanData) {
+		scannedISBN(scanData);
+	}
+	if (bookData) {
+		scannedBookData(bookData);
+	}
+	if (bookCoverArt) {
+		scannedBookCoverArt(bookCoverArt);
+	}
+
+	if (!show) return null;
 
 	return (
 		<div>
@@ -49,27 +69,6 @@ const Scanner = () => {
 				}}
 				stopStream={stopStream}
 			/>
-			<p>
-				<strong>ISBN: </strong>
-				{scanData}
-			</p>
-			{bookData && (
-				<>
-					<div>
-						<img
-							src={bookData[0].cover ? bookData[0].cover.medium : bookCoverArt}
-							alt="cover art"
-						/>
-					</div>
-					<div>
-						<strong>Title: </strong> {bookData[0].title}
-					</div>
-					<div>
-						<strong>Author: </strong>
-						{bookData[0].authors[0].name}
-					</div>
-				</>
-			)}
 		</div>
 	);
 };

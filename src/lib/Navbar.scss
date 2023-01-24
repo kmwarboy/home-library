@@ -1,0 +1,32 @@
+.navbar-container {
+	width: 100%;
+	// border: 1px solid black;
+	padding: 40px 0;
+
+	.navbar-inner {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 20px;
+
+		.navbar-title {
+			display: flex;
+			align-items: center;
+			font-size: 22px;
+
+			h2 {
+				margin: 0 0 0 20px;
+			}
+		}
+
+		.navbar-links {
+			display: flex;
+			align-items: center;
+		}
+	}
+
+	@media screen and (max-width: 780px) {
+		.navbar-title {
+			font-size: 18px;
+		}
+	}
+}
