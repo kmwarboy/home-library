@@ -5,6 +5,8 @@ import Navbar from "../lib/Navbar";
 import Scanner from "../Scanner/Scanner";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Dashboard.scss";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase.js";
 
 /*TODO
 
@@ -38,6 +40,30 @@ const Dashboard = () => {
 			setStartScan(false);
 		}
 	}, [scanData, bookData]);
+
+	useEffect(() => {
+		if (!openModal) {
+			setBookCoverArt(null);
+			setBookData(null);
+			setScanData(null);
+		}
+	}, [openModal]);
+
+	const addBook = async (evt) => {
+		evt.preventDefault();
+		try {
+			console.log("trying");
+			addDoc(collection(db, "books"), {
+				isbn: scanData,
+				title: bookData[0].title,
+				author: bookData[0].authors[0].name,
+				cover: bookData[0].cover ? bookData[0].cover.medium : bookCoverArt,
+			});
+			console.log("success");
+		} catch (evt) {
+			console.error("error adding book: ", evt);
+		}
+	};
 
 	console.log(scanData);
 	console.log(bookData);
@@ -105,35 +131,23 @@ const Dashboard = () => {
 												<strong>Author: </strong>
 												{bookData[0].authors[0].name}
 											</div>
+											{/* Need to figure out the best way to do genre - data not consistent */}
+											{/* <div className="book-author">
+												<strong>Genres: </strong>
+												{bookData[0].subjects[6].name}
+											</div> */}
 										</div>
 									</>
 								)}
 							</div>
-							{/* <p>
-								<strong>ISBN: </strong>
-								{scanData}
-							</p> */}
-							{/* {bookData && (
-								<>
-									<div>
-										<img
-											src={
-												bookData[0].cover
-													? bookData[0].cover.medium
-													: bookCoverArt
-											}
-											alt="cover art"
-										/>
-									</div>
-									<div>
-										<strong>Title: </strong> {bookData[0].title}
-									</div>
-									<div>
-										<strong>Author: </strong>
-										{bookData[0].authors[0].name}
-									</div>
-								</>
-							)} */}
+							<button
+								onClick={(evt) => {
+									// alert("TODO-add book to firebase collection");
+									addBook(evt);
+								}}
+							>
+								add book to library
+							</button>
 						</Modal>
 					)}
 				</div>

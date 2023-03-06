@@ -1,7 +1,7 @@
 .dashboard-modal {
 	border: 1px solid red;
 	display: flex;
-	min-height: 100%;
+	min-height: fit-content;
 
 	.modal-left {
 		border: 1px solid black;
@@ -14,23 +14,19 @@
 
 	.modal-right {
 		width: 50%;
-		// border: 1px solid black;
+		border: 1px solid black;
 		margin-left: 10px;
+		// padding-top: 20px;
 		display: flex;
-		justify-content: center;
 		flex-direction: column;
 
-		.book-isbn {
+		.book-isbn,
+		.book-title,
+		.book-author,
+		.book-genre {
 			border: 1px solid black;
 			text-align: left;
-		}
-		.book-title {
-			border: 1px solid black;
-			text-align: left;
-		}
-		.book-author {
-			border: 1px solid black;
-			text-align: left;
+			height: 20%;
 		}
 	}
 }

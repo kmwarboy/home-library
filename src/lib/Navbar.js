@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookReader } from "@fortawesome/free-solid-svg-icons";
+import { logout } from "../firebase";
 import "./Navbar.scss";
 
 const Navbar = () => {
@@ -13,7 +14,9 @@ const Navbar = () => {
 					<h2>little home library</h2>
 				</div>
 				<div className="navbar-links">
-					<Link to="/">sign out</Link>
+					<Link to="/" onClick={logout}>
+						sign out
+					</Link>
 				</div>
 			</div>
 		</div>
