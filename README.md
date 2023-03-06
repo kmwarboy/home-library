@@ -1,6 +1,11 @@
-# Getting Started with Create React App
+# Home Library - Personal Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+(In progress - March 2023)
+The goal of this project is to showcase various skills across a full-stack React app, while simultaneoously creating something fun for my family to use. The general concept is to be able to scan a book, and populate data based off of API calls via the ISBN. You can then add the book to your collection/library, or choose not to. If the book is already in your library it should provide that information and give you the option to remove it.
+
+This idea was inspired by my 9 year old who is an avid reader, and frequently loses track of which books she has, which books within a series she needs, and other bookworm dilemmas.
+
+The app is built with a React/SCSS frontend, and a backend built using Firebase (for auth and data storage). I'll be blogging about the process here [Medium](https://medium.com/@kmwarboy), and you can check out my personal site and contact me [here](kaitwarboy.dev) with any suggestions or comments.
 
 ## Available Scripts
 
