@@ -35,7 +35,8 @@ const Scanner = ({
 
 	useEffect(() => {
 		// If no book covers show up from the first API, call this one
-		if (bookData && !bookData[0].cover) {
+		if (bookData && !bookData[0]?.cover) {
+			console.log("no cover");
 			axios
 				.get(`https://bookcover-api.onrender.com/bookcover/${scanData}`)
 				.then((response) => {

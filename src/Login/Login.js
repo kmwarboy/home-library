@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { UserAuth } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookReader } from "@fortawesome/free-solid-svg-icons";
 import "./Login.scss";
@@ -9,16 +8,37 @@ import "./Login.scss";
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [user, loading] = useAuthState(auth);
+	const [error, setError] = useState("");
 	const navigate = useNavigate();
+	const { googleSignIn, user, signIn } = UserAuth();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			await signIn(email, password);
+			navigate("/dashboard");
+		} catch (e) {
+			setError(e.message);
+			alert(error);
+		}
+	};
+
+	const handleGoogleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			await googleSignIn();
+			navigate("/dashboard");
+		} catch (e) {
+			setError(e.message);
+			alert(e.message);
+		}
+	};
 
 	useEffect(() => {
-		if (loading) {
-			// maybe trigger a loading screen
-			return;
+		if (user != null) {
+			navigate("/dashboard");
 		}
-		if (user) navigate("/dashboard");
-	}, [user, loading, navigate]);
+	}, [user]);
 
 	return (
 		<div className="login">
@@ -30,9 +50,9 @@ const Login = () => {
 				<div className="login-form">
 					<form>
 						<div className="login-field">
-							<label htmlFor="username">username: </label>
+							<label htmlFor="email">email: </label>
 							<input
-								name="username"
+								name="email"
 								type="text"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
@@ -47,14 +67,10 @@ const Login = () => {
 								onChange={(e) => setPassword(e.target.value)}
 							/>
 						</div>
-						<button
-							className="login-btn"
-							onClick={() => logInWithEmailAndPassword(email, password)}
-						>
+						<button className="login-btn" onClick={handleSubmit}>
 							sign in
 						</button>
-						OR
-						<button className="login-btn" onClick={signInWithGoogle}>
+						<button className="login-btn" onClick={handleGoogleSubmit}>
 							sign in with google
 						</button>
 					</form>

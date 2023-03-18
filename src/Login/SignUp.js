@@ -1,37 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { Link } from "react-router-dom";
-import {
-	auth,
-	registerWithEmailAndPassword,
-	signInWithGoogle,
-} from "../firebase";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
 import "./SignUp.scss";
 
 function SignUp() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [name, setName] = useState("");
-	const [user, loading] = useAuthState(auth);
-	// const history = useHistory();
-	const register = () => {
-		if (!name) alert("Please enter name");
-		registerWithEmailAndPassword(name, email, password);
+	const [error, setError] = useState("");
+	const { createUser } = UserAuth();
+	const navigate = useNavigate();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setError("");
+		try {
+			await createUser(email, password);
+			navigate("/dashboard");
+		} catch (e) {
+			setError(e.message);
+			console.log(error);
+		}
 	};
-	useEffect(() => {
-		if (loading) return;
-		if (user) window.location.href = "/dashboard";
-	}, [user, loading]);
+
 	return (
 		<div className="signUp">
 			<div className="signUp-container">
-				<input
-					type="text"
-					className="signUp-input"
-					value={name}
-					onChange={(e) => setName(e.target.value)}
-					placeholder="Full Name"
-				/>
 				<input
 					type="text"
 					className="signUp-input"
@@ -46,12 +39,12 @@ function SignUp() {
 					onChange={(e) => setPassword(e.target.value)}
 					placeholder="Password"
 				/>
-				<button className="signUp-btn" onClick={register}>
+				<button className="signUp-btn" onClick={handleSubmit}>
 					Register
 				</button>
-				<button className="signUp-btn signUp-google" onClick={signInWithGoogle}>
+				{/* <button className="signUp-btn signUp-google" onClick={signInWithGoogle}>
 					Register with Google
-				</button>
+				</button> */}
 				<div>
 					Already have an account? <Link to="/">Login</Link> now.
 				</div>
