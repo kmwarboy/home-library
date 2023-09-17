@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebase.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookReader } from "@fortawesome/free-solid-svg-icons";
 import "./Login.scss";
@@ -12,33 +14,54 @@ const Login = () => {
 	const navigate = useNavigate();
 	const { googleSignIn, user, signIn } = UserAuth();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 		try {
 			await signIn(email, password);
-			navigate("/dashboard");
-		} catch (e) {
-			setError(e.message);
+		} catch (event) {
+			setError(event.message);
 			alert(error);
 		}
 	};
 
-	const handleGoogleSubmit = async (e) => {
-		e.preventDefault();
+	const handleGoogleSubmit = async (event) => {
+		event.preventDefault();
 		try {
 			await googleSignIn();
-			navigate("/dashboard");
-		} catch (e) {
-			setError(e.message);
-			alert(e.message);
+		} catch (event) {
+			setError(event.message);
+			alert(event.message);
 		}
 	};
 
+	async function checkUser() {
+		const currentUid = user.uid;
+		const usersRef = collection(db, "librarians");
+		// Create a query against the collection.
+		const userQuery = query(usersRef, where("uid", "==", currentUid));
+		const querySnapshot = await getDocs(userQuery);
+
+		if (querySnapshot.empty === true) {
+			console.log("no match");
+			addDoc(collection(db, "librarians"), {
+				uid: user.uid,
+				name: user.displayName,
+				email: user.email,
+				avatar: user.photoURL,
+				books: [],
+			});
+		} else {
+			console.log("user already exists!");
+		}
+	}
+
 	useEffect(() => {
 		if (user != null) {
+			console.log(user);
 			navigate("/dashboard");
+			checkUser();
 		}
-	}, [user]);
+	});
 
 	return (
 		<div className="login">
@@ -55,7 +78,7 @@ const Login = () => {
 								name="email"
 								type="text"
 								value={email}
-								onChange={(e) => setEmail(e.target.value)}
+								onChange={(event) => setEmail(event.target.value)}
 							/>
 						</div>
 						<div className="login-field">
@@ -64,7 +87,7 @@ const Login = () => {
 								name="password"
 								type="password"
 								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								onChange={(event) => setPassword(event.target.value)}
 							/>
 						</div>
 						<button className="login-btn" onClick={handleSubmit}>

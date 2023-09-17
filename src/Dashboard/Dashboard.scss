@@ -30,3 +30,12 @@
 		}
 	}
 }
+
+.bookshelf-container {
+	margin-top: 20px;
+	display: flex;
+
+	.bookshelf-card {
+		flex-direction: column;
+	}
+}

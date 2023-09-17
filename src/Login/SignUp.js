@@ -9,16 +9,26 @@ function SignUp() {
 	const [error, setError] = useState("");
 	const { createUser } = UserAuth();
 	const navigate = useNavigate();
+	const { googleSignIn } = UserAuth();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 		setError("");
 		try {
-			await createUser(email, password);
-			navigate("/dashboard");
-		} catch (e) {
-			setError(e.message);
-			console.log(error);
+			await createUser(email, password).then(navigate("/dashboard"));
+		} catch (event) {
+			setError(event.message);
+			alert(error);
+		}
+	};
+
+	const handleGoogleSubmit = async (event) => {
+		event.preventDefault();
+		try {
+			await googleSignIn().then(navigate("/dashboard"));
+		} catch (event) {
+			setError(event.message);
+			alert(error);
 		}
 	};
 
@@ -29,22 +39,25 @@ function SignUp() {
 					type="text"
 					className="signUp-input"
 					value={email}
-					onChange={(e) => setEmail(e.target.value)}
+					onChange={(event) => setEmail(event.target.value)}
 					placeholder="E-mail Address"
 				/>
 				<input
 					type="password"
 					className="signUp-input"
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={(event) => setPassword(event.target.value)}
 					placeholder="Password"
 				/>
 				<button className="signUp-btn" onClick={handleSubmit}>
 					Register
 				</button>
-				{/* <button className="signUp-btn signUp-google" onClick={signInWithGoogle}>
+				<button
+					className="signUp-btn signUp-google"
+					onClick={handleGoogleSubmit}
+				>
 					Register with Google
-				</button> */}
+				</button>
 				<div>
 					Already have an account? <Link to="/">Login</Link> now.
 				</div>

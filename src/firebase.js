@@ -8,6 +8,7 @@ const firebaseConfig = configData;
 
 // initialize firebase
 const app = initializeApp(firebaseConfig);
+console.log(app);
 
 // initialize fb auth and get a ref to the seervice
 export const auth = getAuth(app);
